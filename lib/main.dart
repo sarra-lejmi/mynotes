@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/views/home_page_view.dart';
+import 'package:mynotes/views/login_view.dart';
+import 'package:mynotes/views/register_view.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -15,8 +17,10 @@ void main() async {
         primarySwatch: Colors.blue,
       ),
       home: const HomePageView(),
+      routes: {
+        "/login/": (context) => const LoginView(),
+        "/register/": (context) => const RegisterView(),
+      },
     ),
   );
 }
-
-
