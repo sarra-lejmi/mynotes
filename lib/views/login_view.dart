@@ -53,10 +53,13 @@ class _LoginViewState extends State<LoginView> {
               final email = _emailController.text;
               final password = _passwordController.text;
               try {
-                UserCredential userCredential = await FirebaseAuth.instance
-                    .signInWithEmailAndPassword(
-                        email: email, password: password);
+                UserCredential userCredential =
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
                 print(userCredential);
+                Navigator.of(context).pushNamedAndRemoveUntil("/notes/", (route) => false);
               } on FirebaseAuthException catch (e) {
                 if (e.code == "user-not-found") {
                   print("User not found!");
@@ -68,13 +71,15 @@ class _LoginViewState extends State<LoginView> {
                   print("Something went wrong");
                 }
               }
-              Navigator.of(context).pushNamedAndRemoveUntil("/test/", (route) => false);
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil("/test/", (route) => false);
             },
             child: const Text('Login'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, "/register/", (route) => route.isFirst);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, "/register/", (route) => route.isFirst);
             },
             child: const Text("Not regigistred yet? regidter now!"),
           ),
