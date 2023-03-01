@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routes.dart';
+import 'package:mynotes/utilities/show_error_dialog.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -58,27 +59,34 @@ class _RegisterViewState extends State<RegisterView> {
               final email = _emailController.text;
               final password = _passwordController.text;
               try {
-                UserCredential userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
-                print(userCredential);
+                await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+                final user = FirebaseAuth.instance.currentUser;
+                await user?.sendEmailVerification();
+                Navigator.of(context).pushNamed(verifyEmailRoute);
               } on FirebaseAuthException catch (e) {
                 if (e.code == "email-already-in-use") {
-                  print("This Email is already in use");
+                  await showErrorDialog(
+                      context, "This Email is already in use!");
                 } else if (e.code == "weak-password") {
-                  print("Weak password !");
+                  await showErrorDialog(context, "Weak password!");
                 } else if (e.code == "invalid-email") {
-                  print("Invalid Email");
+                  await showErrorDialog(context, "Invalid Email!");
                 } else {
-                  print("Something went wrong!");
+                  await showErrorDialog(context, "Error: ${e.code}");
                 }
+              } catch (e) {
+                await showErrorDialog(context, "Error: ${e.toString()}");
               }
             },
             child: const Text("Register"),
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(loginRoute, (route) => false);
             },
             child: const Text("Already registred? Login to your account!"),
           ),

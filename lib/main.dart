@@ -5,6 +5,7 @@ import 'package:mynotes/views/home_page_view.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/notes_view.dart';
 import 'package:mynotes/views/register_view.dart';
+import 'package:mynotes/views/verify_email_view.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -18,11 +19,13 @@ void main() async {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePageView(),
+      // home: const HomePageView(),
+      home: const VerifyEmailView(),
       routes: {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
+        verifyEmailRoute:(context) => const VerifyEmailView(),
       },
     ),
   );
