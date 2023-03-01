@@ -19,8 +19,7 @@ void main() async {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: const HomePageView(),
-      home: const VerifyEmailView(),
+      home: const HomePageView(),
       routes: {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
