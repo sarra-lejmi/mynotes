@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/services/auth/auth_service.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/notes_view.dart';
 import 'package:mynotes/views/verify_email_view.dart';
@@ -10,9 +10,9 @@ class HomePageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(builder: (context, snapshot) {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = AuthService.firebase().currentUser;    
       if (user != null) {
-        if (user.emailVerified) {
+        if (user.isEmailVerified) {
           return const NotesView();
         } else {
           return const VerifyEmailView();
