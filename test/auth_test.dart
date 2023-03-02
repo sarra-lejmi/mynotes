@@ -36,34 +36,34 @@ void main() {
       timeout: const Timeout(Duration(seconds: 2)),
     );
 
-    // test("Create user should delegate to login function", () async{
-    //   final badEmailUser =  provider.createUser(email: "sarra@gmail.com", password: "anypassword");
-    //   expect(badEmailUser, throwsA(const TypeMatcher<UserNotFoundAuthException>()));
+    test("Create user should delegate to login function", () async{
+      final badEmailUser = provider.createUser(email: "sarra@gmail.com", password: "anypassword");
+      expect(badEmailUser, throwsA(const TypeMatcher<UserNotFoundAuthException>()));
 
-    //   final badPasswordUSer =  provider.createUser(email: "email@gmail.com", password: "password");
-    //   expect(badPasswordUSer, const TypeMatcher<WrongPasswordAuthException>());
+      final badPasswordUser = provider.createUser(email: "email@gmail.com", password: "password");
+      expect(badPasswordUser, throwsA(const TypeMatcher<WrongPasswordAuthException>()));
 
-    //   final user = await provider.createUser(email: "exemple@gmail.com", password: "exemple");
-    //   expect(provider.currentUser, user);
-    //   expect(user.isEmailVerified, false);
-    // });
+      final user = await provider.createUser(email: "exemple@gmail.com", password: "exemple");
+      expect(provider.currentUser, user);
+      expect(user.isEmailVerified, false);
+    });
 
-    // test("Loggedin user should be able to get verified", ()  {
-    //    provider.sendEmailVerification();
+    test("Loggedin user should be able to get verified", ()  {
+       provider.sendEmailVerification();
 
-    //   final user = provider.currentUser;
+      final user = provider.currentUser;
 
-    //   expect(user, isNotNull);
-    //   expect(user!.isEmailVerified, true);
-    // });
+      expect(user, isNotNull);
+      expect(user!.isEmailVerified, true);
+    });
 
-    // test("Should be able to logout and login again", () async {
-    //   await provider.logOut();
-    //   await provider.logIn(email: "exemple", password: "exemple");
+    test("Should be able to logout and login again", () async {
+      await provider.logOut();
+      await provider.logIn(email: "exemple", password: "exemple");
 
-    //   final user = provider.currentUser;
-    //   expect(user, isNotNull);
-    // });
+      final user = provider.currentUser;
+      expect(user, isNotNull);
+    });
   });
 }
 
