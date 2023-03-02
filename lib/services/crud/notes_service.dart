@@ -85,16 +85,23 @@ class NotesService {
   List<NoteDB> _notes = [];
 
   static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance();
+  NotesService._sharedInstance() {
+    _notesStreamController = StreamController<List<NoteDB>>.broadcast(
+      onListen: () {
+        _notesStreamController.sink.add(_notes);
+      },
+    );
+  }
+  
   factory NotesService() => _shared;
 
-  final _notesStreamController = StreamController<List<NoteDB>>.broadcast();
-  
+  late final StreamController<List<NoteDB>> _notesStreamController;
+
   Stream<List<NoteDB>> get allNotes => _notesStreamController.stream;
 
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
-    
+
     _notes = allNotes.toList();
     _notesStreamController.add(_notes);
   }
@@ -123,9 +130,7 @@ class NotesService {
   Future<void> _ensureDbIsOpen() async {
     try {
       await open();
-    } on DatabaseAlreadyOpenException {
-      
-    }
+    } on DatabaseAlreadyOpenException {}
   }
 
   Future<void> close() async {
@@ -191,13 +196,13 @@ class NotesService {
       return UserDB.fromRow(results.first);
     }
   }
-  
+
   Future<UserDB> getOrCreateUser({required String email}) async {
     try {
       final user = await getUser(email: email);
       return user;
     } on CouldNotFindUser {
-      final createdUser =  await createUser(email: email);
+      final createdUser = await createUser(email: email);
       return createdUser;
     } catch (e) {
       rethrow;
@@ -293,7 +298,8 @@ class NotesService {
     return notes.map((noteRow) => NoteDB.fromRow(noteRow));
   }
 
-  Future<NoteDB> updateNote({required NoteDB note, required String text}) async {
+  Future<NoteDB> updateNote(
+      {required NoteDB note, required String text}) async {
     await _ensureDbIsOpen();
 
     final db = _getDatabaseOrThrow();
