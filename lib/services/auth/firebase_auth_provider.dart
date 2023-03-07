@@ -9,8 +9,8 @@ class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<void> initialize() async {
     await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   }
 
   @override
@@ -98,6 +98,24 @@ class FirebaseAuthProvider implements AuthProvider {
       await user.sendEmailVerification();
     } else {
       throw UserNotLoggedInAuthException();
+    }
+  }
+
+  @override
+  Future<void> sendPasswordReset({required String toEmail}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: toEmail);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "firebase_auth/invalid-email":
+          throw InvalidEmailAuthException();
+        case "firebase_auth/user-not-found":
+          throw UserNotFoundAuthException();
+        default:
+          throw GenericAuthExeption();
+      }
+    } catch (_) {
+      throw GenericAuthExeption();
     }
   }
 }
